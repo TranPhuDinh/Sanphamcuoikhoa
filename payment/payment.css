@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e9f5f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 950px;
+    width: 100%;
+}
+
+.checkout-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.form-section {
+    width: calc(50% - 10px);
+}
+
+.section-title {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #c20000;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333333;
+}
+
+.form-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.card-icons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.card-item {
+    width: 60px;
+    height: 40px;
+    object-fit: contain;
+    margin-right: 8px;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #28a745;
+    color: white;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.4s;
+}
+
+.submit-button:hover {
+    background-color: #055817;
+}
