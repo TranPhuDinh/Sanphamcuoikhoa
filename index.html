@@ -126,106 +126,10 @@
       </section>
 
       <section id="categories">
-        <div class="row">
-          <div class="col">
-            Column
-            <!-- children -->
-            <div class="children">
-              <div>Column</div>
-              <div>Column</div>
-              <div>Column</div>
-            </div>
-          </div>
-          <div class="col">Column</div>
-          <div class="col">Column</div>
-        </div>
+        <div class="row text-center" id="categories_list"></div>
       </section>
 
-      <section class="product-grid">
-        <article class="product">
-          <img src="img/download (1).jpg" alt="Sản phẩm 1" />
-          <div class="product-info">
-            <h2>Sản phẩm 1</h2>
-            <p>Mô tả ngắn gọn về sản phẩm 1.</p>
-            <div class="price">200.000 VNĐ</div>
-            <button class="btn">Thêm vào giỏ</button>
-          </div>
-        </article>
-
-        <article class="product">
-          <img src="img/download (2).jpg" alt="Sản phẩm 2" />
-          <div class="product-info">
-            <h2>Sản phẩm 2</h2>
-            <p>Mô tả ngắn gọn về sản phẩm 2.</p>
-            <div class="price">300.000 VNĐ</div>
-            <button class="btn">Thêm vào giỏ</button>
-          </div>
-        </article>
-
-        <article class="product">
-          <img src="img/download.jpg" alt="Sản phẩm 3" />
-          <div class="product-info">
-            <h2>Sản phẩm 3</h2>
-            <p>Mô tả ngắn gọn về sản phẩm 3.</p>
-            <div class="price">300.000 VNĐ</div>
-            <button class="btn">Thêm vào giỏ</button>
-          </div>
-        </article>
-        <article class="product">
-          <img src="img/download (3).jpg" alt="Sản phẩm 4" />
-          <div class="product-info">
-            <h2>Sản phẩm 4</h2>
-            <p>Mô tả ngắn gọn về sản phẩm 4.</p>
-            <div class="price">300.000 VNĐ</div>
-            <button class="btn">Thêm vào giỏ</button>
-          </div>
-        </article>
-        <article class="product">
-          <img src="img/download (4).jpg" alt="Sản phẩm 5" />
-          <div class="product-info">
-            <h2>Sản phẩm 5</h2>
-            <p>Mô tả ngắn gọn về sản phẩm 5.</p>
-            <div class="price">300.000 VNĐ</div>
-            <button class="btn">Thêm vào giỏ</button>
-          </div>
-        </article>
-        <article class="product">
-          <img src="img/download (5).jpg" alt="Sản phẩm 6" />
-          <div class="product-info">
-            <h2>Sản phẩm 6</h2>
-            <p>Mô tả ngắn gọn về sản phẩm 6.</p>
-            <div class="price">300.000 VNĐ</div>
-            <button class="btn">Thêm vào giỏ</button>
-          </div>
-        </article>
-        <article class="product">
-          <img src="img/download (6).jpg" alt="Sản phẩm 7" />
-          <div class="product-info">
-            <h2>Sản phẩm 7</h2>
-            <p>Mô tả ngắn gọn về sản phẩm 7.</p>
-            <div class="price">300.000 VNĐ</div>
-            <button class="btn">Thêm vào giỏ</button>
-          </div>
-        </article>
-        <article class="product">
-          <img src="img/images (1).jpg" alt="Sản phẩm 8" />
-          <div class="product-info">
-            <h2>Sản phẩm 8</h2>
-            <p>Mô tả ngắn gọn về sản phẩm 8.</p>
-            <div class="price">300.000 VNĐ</div>
-            <button class="btn">Thêm vào giỏ</button>
-          </div>
-        </article>
-        <article class="product">
-          <img src="img/images.jpg" alt="Sản phẩm 9" />
-          <div class="product-info">
-            <h2>Sản phẩm 9</h2>
-            <p>Mô tả ngắn gọn về sản phẩm 9.</p>
-            <div class="price">300.000 VNĐ</div>
-            <button class="btn">Thêm vào giỏ</button>
-          </div>
-        </article>
-      </section>
+      <section class="product-grid" id="products_list"></section>
     </main>
     <footer>
       <p>&copy; 2025 Trang Bán Hàng. Tất cả các quyền được bảo lưu.</p>
@@ -236,6 +140,7 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-    
+
+    <script src="./js/call_api.js"></script>
   </body>
 </html>
