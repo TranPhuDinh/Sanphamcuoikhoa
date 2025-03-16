@@ -133,4 +133,59 @@ function create_product_item(product) {
 
   const img = document.createElement("img");
   img.src = product.DefaultProductImage;
-  img.alt = product.DisplayName
+  img.alt = product.DisplayName;
+  article.appendChild(img);
+
+  const productInfo = document.createElement("div");
+  productInfo.className = "product-info";
+
+  const h2 = document.createElement("h2");
+  h2.textContent = product.DisplayName;
+  productInfo.appendChild(h2);
+
+  const description = document.createElement("p");
+  description.textContent = product.Description || "Mô tả sản phẩm không có sẵn";
+  productInfo.appendChild(description);
+
+  const price = document.createElement("div");
+  price.className = "price";
+  
+  const priceStrong = document.createElement("strong");
+  priceStrong.textContent = "$" + product.ListPrice;
+  price.appendChild(priceStrong);
+  
+  if (product.OriginalPrice && product.OriginalPrice !== product.ListPrice) {
+    const originalPrice = document.createElement("span");
+    originalPrice.className = "original-price";
+    originalPrice.textContent = " " + product.OriginalPrice;
+    originalPrice.style.textDecoration = "line-through";
+    originalPrice.style.color = "#999";
+    originalPrice.style.marginLeft = "8px";
+    price.appendChild(originalPrice);
+  }
+  
+  productInfo.appendChild(price);
+
+  const button = document.createElement("button");
+  button.className = "btn btn-primary";
+  button.textContent = "Thêm vào giỏ hàng";
+  button.id = product.ItemCode; // Set the product ItemCode as the button ID for identification
+  productInfo.appendChild(button);
+
+  article.appendChild(productInfo);
+  return article;
+}
+
+// Call categories API when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  const categoriesList = document.getElementById("categories_list");
+  if (categoriesList) {
+    callCategoriesApi();
+  }
+  
+  // If on product page, load products
+  const productsList = document.getElementById("products_list");
+  if (productsList) {
+    callProductsApi();
+  }
+});
