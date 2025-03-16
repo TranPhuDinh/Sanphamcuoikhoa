@@ -129,7 +129,7 @@ function updateCartCount() {
   let cartCountBadge = document.querySelector('.cart-count');
   if (!cartCountBadge) {
     // Add cart count badge to all cart buttons
-    const cartButtons = document.querySelectorAll('a[href$="cart.html"]');
+    const cartButtons = document.querySelectorAll('a[href*="cart.html"]');
     cartButtons.forEach(button => {
       if (!button.querySelector('.cart-count')) {
         cartCountBadge = document.createElement('span');
@@ -163,27 +163,57 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTotal();
   }
   
-  // Add click event to all product buttons
-  const addToCartButtons = document.querySelectorAll('.btn-primary');
-  addToCartButtons.forEach(button => {
-    if (button.id && !button.id.includes('login')) {
-      button.addEventListener('click', function(e) {
+  // Add event listener to add to cart buttons for products
+  function setupAddToCartButtons() {
+    // This function needs to be callable both on page load and after products are dynamically added
+    const addToCartButtons = document.querySelectorAll('.product .btn-primary');
+    addToCartButtons.forEach(button => {
+      // Remove any existing event listeners to avoid duplicates
+      const newButton = button.cloneNode(true);
+      button.parentNode.replaceChild(newButton, button);
+      
+      newButton.addEventListener('click', function(e) {
         e.preventDefault();
         const productElement = this.closest('.product');
         if (productElement) {
+          const priceElement = productElement.querySelector('.price strong');
+          const price = parseFloat(priceElement.textContent.replace('$', '')) * 23000; // Convert USD to VND
+          
           const product = {
             id: this.id,
             name: productElement.querySelector('h2').textContent,
-            price: parseFloat(productElement.querySelector('.price strong').textContent.replace('$', '')) * 23000, // Convert USD to VND
+            price: price,
             image: productElement.querySelector('img').src,
             quantity: 1
           };
+          
           addToCart(product);
           alert('Đã thêm sản phẩm vào giỏ hàng!');
         }
       });
+    });
+  }
+  
+  // Initial setup
+  setupAddToCartButtons();
+  
+  // Check if we're on the index page which loads products dynamically
+  if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+    // Wait for products to be loaded
+    const productsObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.addedNodes.length) {
+          // Once products are added to the DOM, set up cart buttons
+          setupAddToCartButtons();
+        }
+      });
+    });
+    
+    const productsContainer = document.getElementById('products_list');
+    if (productsContainer) {
+      productsObserver.observe(productsContainer, { childList: true });
     }
-  });
+  }
 });
 
 // Redirect to homepage after payment

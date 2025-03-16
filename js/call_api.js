@@ -30,8 +30,6 @@ async function callCategoriesApi() {
     });
 }
 
-// callCategoriesApi();
-
 // call products api
 async function callProductsApi() {
   // get list of categories
@@ -57,14 +55,67 @@ async function callProductsApi() {
       product.forEach((product) => {
         ui_list.appendChild(create_product_item(product));
       });
+      
+      // Initialize add to cart buttons after products are loaded
+      if (typeof setupAddToCartButtons === 'function') {
+        setupAddToCartButtons();
+      }
     })
     .catch((error) => {
       // handle error
       console.log(error);
+      
+      // If API fails, load some sample products
+      loadSampleProducts();
     });
 }
 
-callProductsApi();
+// Load sample products if API fails
+function loadSampleProducts() {
+  const ui_list = document.getElementById("products_list");
+  if (!ui_list) return;
+  
+  const sampleProducts = [
+    {
+      ItemCode: "prod1",
+      DisplayName: "Áo thun basic",
+      Description: "Áo thun cotton chất lượng cao",
+      DefaultProductImage: "/api/placeholder/300/300",
+      ListPrice: "15.99",
+      OriginalPrice: "$19.99"
+    },
+    {
+      ItemCode: "prod2",
+      DisplayName: "Quần jean nam",
+      Description: "Quần jean nam cao cấp",
+      DefaultProductImage: "/api/placeholder/300/300",
+      ListPrice: "29.99",
+      OriginalPrice: "$39.99"
+    },
+    {
+      ItemCode: "prod3",
+      DisplayName: "Váy nữ mùa hè",
+      Description: "Váy nữ thời thượng",
+      DefaultProductImage: "/api/placeholder/300/300",
+      ListPrice: "24.99",
+      OriginalPrice: "$34.99"
+    }
+  ];
+  
+  sampleProducts.forEach(product => {
+    ui_list.appendChild(create_product_item(product));
+  });
+  
+  // Initialize add to cart buttons after sample products are loaded
+  if (typeof setupAddToCartButtons === 'function') {
+    setupAddToCartButtons();
+  }
+}
+
+// Try to load products when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+  callProductsApi();
+});
 
 // support functions -------------------------------------------------
 function create_category_item(category) {
@@ -75,8 +126,6 @@ function create_category_item(category) {
   return col;
 }
 
-function create_category_children_list() {}
-
 function create_product_item(product) {
   // create product item
   const article = document.createElement("article");
@@ -84,33 +133,4 @@ function create_product_item(product) {
 
   const img = document.createElement("img");
   img.src = product.DefaultProductImage;
-  img.alt = product.DisplayName;
-  article.appendChild(img);
-
-  const product_info = document.createElement("div");
-  product_info.className = "product-info";
-
-  const h2 = document.createElement("h2");
-  h2.textContent = product.DisplayName;
-  product_info.appendChild(h2);
-
-  const p = document.createElement("p");
-  p.innerHTML = product.Description;
-  product_info.appendChild(p);
-
-  const price = document.createElement("div");
-  price.className = "price";
-  price.style = "display: flex; justify-content: space-between;";
-  price.innerHTML = `<strong>$${product.ListPrice}</strong> <s>${product.OriginalPrice}</s>`;
-  product_info.appendChild(price);
-
-  const btn = document.createElement("button");
-  btn.className = "btn btn-primary";
-  btn.id = product.ItemCode;
-  btn.textContent = "Thêm vào giỏ";
-  product_info.appendChild(btn);
-
-  article.appendChild(product_info);
-
-  return article;
-}
+  img.alt = product.DisplayName
