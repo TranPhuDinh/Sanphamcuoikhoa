@@ -22,8 +22,7 @@ function addToCart(product) {
   
   // Save cart to localStorage
   localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  updateCartUI();
-  updateTotal();
+  updateCartCount();
 }
 
 // Remove item from cart
@@ -77,8 +76,11 @@ function updateCartUI() {
   
   if (cartItems.length === 0) {
     cartItemsContainer.innerHTML = '<div class="alert alert-info">Giỏ hàng của bạn đang trống</div>';
+    document.getElementById('checkoutBtn').disabled = true;
     return;
   }
+  
+  document.getElementById('checkoutBtn').disabled = false;
   
   cartItems.forEach(item => {
     const itemElement = document.createElement('div');
@@ -118,6 +120,33 @@ function updateCartUI() {
   });
 }
 
+// Update cart count in navbar
+function updateCartCount() {
+  const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  
+  // Create or find the cart count badge
+  let cartCountBadge = document.querySelector('.cart-count');
+  if (!cartCountBadge) {
+    // Add cart count badge to all cart buttons
+    const cartButtons = document.querySelectorAll('a[href$="cart.html"]');
+    cartButtons.forEach(button => {
+      if (!button.querySelector('.cart-count')) {
+        cartCountBadge = document.createElement('span');
+        cartCountBadge.className = 'badge bg-danger rounded-pill cart-count';
+        cartCountBadge.style.marginLeft = '5px';
+        button.appendChild(cartCountBadge);
+      }
+    });
+  }
+  
+  // Update all cart count badges
+  document.querySelectorAll('.cart-count').forEach(badge => {
+    badge.textContent = totalItems;
+    badge.style.display = totalItems > 0 ? 'inline' : 'none';
+  });
+}
+
 // Helper function to format currency
 function formatCurrency(amount) {
   return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -125,34 +154,41 @@ function formatCurrency(amount) {
 
 // Initialize cart when page loads
 document.addEventListener('DOMContentLoaded', function() {
+  // Update cart count
+  updateCartCount();
+  
+  // If on cart page, update the cart UI
   if (window.location.pathname.includes('cart.html')) {
     updateCartUI();
     updateTotal();
   }
+  
+  // Add click event to all product buttons
+  const addToCartButtons = document.querySelectorAll('.btn-primary');
+  addToCartButtons.forEach(button => {
+    if (button.id && !button.id.includes('login')) {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const productElement = this.closest('.product');
+        if (productElement) {
+          const product = {
+            id: this.id,
+            name: productElement.querySelector('h2').textContent,
+            price: parseFloat(productElement.querySelector('.price strong').textContent.replace('$', '')) * 23000, // Convert USD to VND
+            image: productElement.querySelector('img').src,
+            quantity: 1
+          };
+          addToCart(product);
+          alert('Đã thêm sản phẩm vào giỏ hàng!');
+        }
+      });
+    }
+  });
 });
 
-// Add to cart button functionality for product list page
-function initAddToCartButtons() {
-  const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-  addToCartButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const productId = this.id;
-      const productElement = this.closest('.product');
-      const product = {
-        id: productId,
-        name: productElement.querySelector('h2').textContent,
-        price: parseFloat(productElement.querySelector('.price strong').textContent.replace('$', '')) * 23000, // Converting USD to VND
-        image: productElement.querySelector('img').src,
-        quantity: 1
-      };
-      addToCart(product);
-      alert('Đã thêm sản phẩm vào giỏ hàng!');
-    });
-  });
-}
-
 // Redirect to homepage after payment
-function redirectAfterPayment() {
+function redirectToThankYouPage(event) {
+  if (event) event.preventDefault();
   // Clear cart after successful payment
   localStorage.removeItem('cartItems');
   alert('Thanh toán thành công! Cảm ơn bạn đã mua hàng.');
