@@ -52,3 +52,50 @@ footer {
         text-align: center;
     }
 }
+
+@keyframes flyToCart {
+    0% {
+      opacity: 1;
+      transform: scale(1) translateY(0) translateX(0);
+    }
+    25% {
+      opacity: 0.8;
+      transform: scale(0.8) translateY(-10px) translateX(10px);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(0.6) translateY(-20px) translateX(20px);
+    }
+    75% {
+      opacity: 0.4;
+      transform: scale(0.4) translateY(-30px) translateX(30px);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.2) translateY(-50px) translateX(50px);
+    }
+  }
+  
+  .fly-item {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    animation: flyToCart 0.8s ease-in-out forwards;
+  }
+  
+  /* Add a pop animation for the cart icon */
+  @keyframes cartPop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  .cart-pop {
+    animation: cartPop 0.5s ease-in-out;
+  }

@@ -1,28 +1,93 @@
 // Cart management functions
 let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-// Add item to cart
-function addToCart(product) {
-  // Check if product already exists in cart
-  const existingItemIndex = cartItems.findIndex(item => item.id === product.id);
+// Add item to cart with animation
+function addToCart(product, sourceElement) {
+  // Create flying element
+  const flyingElement = createFlyingElement(sourceElement);
   
-  if (existingItemIndex >= 0) {
-    // If item exists, increase quantity
-    cartItems[existingItemIndex].quantity += 1;
-  } else {
-    // If new item, add to cart
-    cartItems.push({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      quantity: 1
-    });
+  // Add to DOM
+  document.body.appendChild(flyingElement);
+  
+  // Calculate destination (cart icon)
+  const cartIcon = document.querySelector('a[href*="cart.html"]');
+  if (cartIcon) {
+    const cartRect = cartIcon.getBoundingClientRect();
+    
+    // Set final position
+    flyingElement.style.setProperty('--final-top', `${cartRect.top}px`);
+    flyingElement.style.setProperty('--final-left', `${cartRect.left}px`);
   }
   
-  // Save cart to localStorage
-  localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  updateCartCount();
+  // Animate cart icon after flying animation completes
+  setTimeout(() => {
+    animateCartIcon();
+    
+    // Check if product already exists in cart
+    const existingItemIndex = cartItems.findIndex(item => item.id === product.id);
+    
+    if (existingItemIndex >= 0) {
+      // If item exists, increase quantity
+      cartItems[existingItemIndex].quantity += 1;
+    } else {
+      // If new item, add to cart
+      cartItems.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: 1
+      });
+    }
+    
+    // Save cart to localStorage
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    updateCartCount();
+  }, 800);
+}
+
+// Create flying element
+function createFlyingElement(sourceElement) {
+  // Get the source element's position
+  const sourceRect = sourceElement.getBoundingClientRect();
+  
+  // Create a new element
+  const flyingElement = document.createElement('div');
+  flyingElement.className = 'fly-item';
+  
+  // Clone the image
+  const productImage = sourceElement.closest('.product').querySelector('img');
+  const clonedImage = document.createElement('img');
+  clonedImage.src = productImage.src;
+  clonedImage.style.width = '50px';
+  clonedImage.style.height = '50px';
+  clonedImage.style.objectFit = 'cover';
+  clonedImage.style.borderRadius = '50%';
+  
+  // Position the flying element
+  flyingElement.style.top = `${sourceRect.top}px`;
+  flyingElement.style.left = `${sourceRect.left}px`;
+  
+  // Add the cloned image to the flying element
+  flyingElement.appendChild(clonedImage);
+  
+  // Remove the element after animation completes
+  setTimeout(() => {
+    flyingElement.remove();
+  }, 1000);
+  
+  return flyingElement;
+}
+
+// Animate cart icon
+function animateCartIcon() {
+  const cartIcon = document.querySelector('a[href*="cart.html"]');
+  if (cartIcon) {
+    cartIcon.classList.add('cart-pop');
+    setTimeout(() => {
+      cartIcon.classList.remove('cart-pop');
+    }, 500);
+  }
 }
 
 // Remove item from cart
@@ -154,6 +219,57 @@ function formatCurrency(amount) {
 
 // Initialize cart when page loads
 document.addEventListener('DOMContentLoaded', function() {
+  // Add animation styles
+  const styleElement = document.createElement('style');
+  styleElement.textContent = `
+    @keyframes flyToCart {
+      0% {
+        opacity: 1;
+        transform: scale(1) translateY(0) translateX(0);
+      }
+      25% {
+        opacity: 0.8;
+        transform: scale(0.8) translateY(-10px) translateX(10px);
+      }
+      50% {
+        opacity: 0.6;
+        transform: scale(0.6) translateY(-20px) translateX(20px);
+      }
+      75% {
+        opacity: 0.4;
+        transform: scale(0.4) translateY(-30px) translateX(30px);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.2) translateY(-50px) translateX(50px);
+      }
+    }
+
+    .fly-item {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      animation: flyToCart 0.8s ease-in-out forwards;
+    }
+
+    @keyframes cartPop {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .cart-pop {
+      animation: cartPop 0.5s ease-in-out;
+    }
+  `;
+  document.head.appendChild(styleElement);
+  
   // Update cart count
   updateCartCount();
   
@@ -163,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTotal();
   }
   
-  // Add event listener to add to cart buttons for products
+  // Setup add to cart buttons
   function setupAddToCartButtons() {
     // This function needs to be callable both on page load and after products are dynamically added
     const addToCartButtons = document.querySelectorAll('.product .btn-primary');
@@ -187,8 +303,8 @@ document.addEventListener('DOMContentLoaded', function() {
             quantity: 1
           };
           
-          addToCart(product);
-          alert('Đã thêm sản phẩm vào giỏ hàng!');
+          // Add to cart with animation
+          addToCart(product, this);
         }
       });
     });
@@ -214,14 +330,3 @@ document.addEventListener('DOMContentLoaded', function() {
       productsObserver.observe(productsContainer, { childList: true });
     }
   }
-});
-
-// Redirect to homepage after payment
-function redirectToThankYouPage(event) {
-  if (event) event.preventDefault();
-  // Clear cart after successful payment
-  localStorage.removeItem('cartItems');
-  alert('Thanh toán thành công! Cảm ơn bạn đã mua hàng.');
-  window.location.href = '../index.html';
-  return false;
-}
