@@ -3,6 +3,23 @@ let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
 // Add item to cart with animation
 function addToCart(product, sourceElement) {
+  // Check authentication status before adding to cart
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  
+  if (!isLoggedIn) {
+    // Save current page URL to return after login
+    localStorage.setItem('cartReturnUrl', window.location.href);
+    
+    // Show login prompt
+    const proceed = confirm('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng. Bạn có muốn đăng nhập ngay?');
+    if (proceed) {
+      window.location.href = './login.html?returnUrl=' + encodeURIComponent(window.location.href);
+      return;
+    } else {
+      return;
+    }
+  }
+
   // Create flying element
   const flyingElement = createFlyingElement(sourceElement);
   
@@ -43,6 +60,9 @@ function addToCart(product, sourceElement) {
     // Save cart to localStorage
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
     updateCartCount();
+    
+    // Show success message
+    showToast(`${product.name} đã được thêm vào giỏ hàng!`);
   }, 800);
 }
 
@@ -92,10 +112,18 @@ function animateCartIcon() {
 
 // Remove item from cart
 function removeItem(itemId) {
+  // Find the item to get its name for the toast message
+  const removedItem = cartItems.find(item => item.id === itemId);
+  const itemName = removedItem ? removedItem.name : 'Sản phẩm';
+
   cartItems = cartItems.filter(item => item.id !== itemId);
   localStorage.setItem('cartItems', JSON.stringify(cartItems));
   updateCartUI();
   updateTotal();
+  updateCartCount();
+  
+  // Show remove success message
+  showToast(`${itemName} đã được xóa khỏi giỏ hàng!`);
 }
 
 // Increase quantity
@@ -106,6 +134,7 @@ function increaseQuantity(itemId) {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
     updateCartUI();
     updateTotal();
+    updateCartCount();
   }
 }
 
@@ -117,6 +146,7 @@ function decreaseQuantity(itemId) {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
     updateCartUI();
     updateTotal();
+    updateCartCount();
   }
 }
 
@@ -127,9 +157,47 @@ function updateTotal() {
   const total = subtotal + shipping;
   
   // Update UI elements
-  document.getElementById('subtotal').innerText = formatCurrency(subtotal) + 'đ';
-  document.getElementById('shipping').innerText = formatCurrency(shipping) + 'đ';
-  document.getElementById('total').innerText = formatCurrency(total) + 'đ';
+  const subtotalElement = document.getElementById('subtotal');
+  const shippingElement = document.getElementById('shipping');
+  const totalElement = document.getElementById('total');
+  
+  if (subtotalElement) subtotalElement.innerText = formatCurrency(subtotal) + 'đ';
+  if (shippingElement) shippingElement.innerText = formatCurrency(shipping) + 'đ';
+  if (totalElement) totalElement.innerText = formatCurrency(total) + 'đ';
+  
+  // Update order summary if on checkout page
+  updateOrderSummary(subtotal, shipping, total);
+}
+
+// Update order summary on checkout page
+function updateOrderSummary(subtotal, shipping, total) {
+  const orderSummaryContainer = document.getElementById('order-summary');
+  if (!orderSummaryContainer) return;
+  
+  let summaryHTML = `
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4>Tóm tắt đơn hàng</h4>
+      </div>
+      <div class="card-body">
+        <div class="d-flex justify-content-between mb-2">
+          <span>Tổng tiền hàng:</span>
+          <span>${formatCurrency(subtotal)}đ</span>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <span>Phí vận chuyển:</span>
+          <span>${formatCurrency(shipping)}đ</span>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between fw-bold">
+          <span>Tổng thanh toán:</span>
+          <span>${formatCurrency(total)}đ</span>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  orderSummaryContainer.innerHTML = summaryHTML;
 }
 
 // Update cart UI
@@ -140,12 +208,30 @@ function updateCartUI() {
   cartItemsContainer.innerHTML = '';
   
   if (cartItems.length === 0) {
-    cartItemsContainer.innerHTML = '<div class="alert alert-info">Giỏ hàng của bạn đang trống</div>';
-    document.getElementById('checkoutBtn').disabled = true;
+    cartItemsContainer.innerHTML = `
+      <div class="text-center py-5">
+        <div class="mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-cart-x text-muted" viewBox="0 0 16 16">
+            <path d="M7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 0 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793z"/>
+            <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 1H2a.5.5 0 0 0 0-1h1.64a.5.5 0 0 0 .311-.118l.5-.294A.5.5 0 0 0 4 12H1.5a.5.5 0 0 1-.474-.658L2.694 4.04l-.867-3.477A.5.5 0 0 0 1.123 0H.5zm3.915 10L3.102 4h10.796l-1.313 6h-9.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+          </svg>
+        </div>
+        <h4 class="text-muted">Giỏ hàng của bạn đang trống</h4>
+        <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng của bạn</p>
+        <a href="./index.html" class="btn btn-primary mt-3">Tiếp tục mua sắm</a>
+      </div>
+    `;
+    
+    // Disable checkout button if it exists
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    if (checkoutBtn) checkoutBtn.disabled = true;
+    
     return;
   }
   
-  document.getElementById('checkoutBtn').disabled = false;
+  // Enable checkout button if it exists
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  if (checkoutBtn) checkoutBtn.disabled = false;
   
   cartItems.forEach(item => {
     const itemElement = document.createElement('div');
@@ -154,7 +240,7 @@ function updateCartUI() {
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col-md-2">
-            <img src="${item.image || '/api/placeholder/100/100'}" class="img-fluid" alt="${item.name}">
+            <img src="${item.image || '/api/placeholder/100/100'}" class="img-fluid rounded" alt="${item.name}">
           </div>
           <div class="col-md-4">
             <h5 class="card-title">${item.name}</h5>
@@ -212,6 +298,137 @@ function updateCartCount() {
   });
 }
 
+// Clear cart function
+function clearCart() {
+  if (confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?')) {
+    cartItems = [];
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    updateCartUI();
+    updateTotal();
+    updateCartCount();
+    showToast('Giỏ hàng đã được xóa!');
+  }
+}
+
+// Checkout function
+function proceedToCheckout() {
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  
+  if (!isLoggedIn) {
+    alert('Vui lòng đăng nhập trước khi thanh toán');
+    window.location.href = './login.html?returnUrl=' + encodeURIComponent('./checkout.html');
+    return false;
+  }
+  
+  if (cartItems.length === 0) {
+    alert('Giỏ hàng của bạn đang trống');
+    return false;
+  }
+  
+  // If everything is valid, navigate to checkout page
+  window.location.href = './checkout.html';
+  return true;
+}
+
+// Save order to Firebase (placeholder function)
+function saveOrderToFirebase(orderData) {
+  // This would be implemented once Firebase is properly initialized
+  console.log("Saving order to Firebase:", orderData);
+  
+  // For now, just clear the cart and redirect to confirmation page
+  cartItems = [];
+  localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  
+  // Save order summary in localStorage for confirmation page
+  localStorage.setItem('lastOrder', JSON.stringify(orderData));
+  
+  // Redirect to confirmation page
+  window.location.href = './order-confirmation.html';
+}
+
+// Handle checkout form submission
+function handleCheckoutSubmission(event) {
+  if (event) event.preventDefault();
+  
+  const orderForm = document.getElementById('checkout-form');
+  if (!orderForm) return;
+  
+  // Get form data
+  const formData = new FormData(orderForm);
+  const checkoutData = {
+    customer: {
+      name: formData.get('fullName'),
+      email: formData.get('email'),
+      phone: formData.get('phone'),
+      address: formData.get('address'),
+      city: formData.get('city'),
+      notes: formData.get('notes')
+    },
+    items: cartItems,
+    subtotal: cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+    shipping: 30000,
+    total: cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0) + 30000,
+    paymentMethod: formData.get('paymentMethod'),
+    orderDate: new Date().toISOString()
+  };
+  
+  // Save order
+  saveOrderToFirebase(checkoutData);
+}
+
+// Toast notification function
+function showToast(message) {
+  // Create toast container if it doesn't exist
+  let toastContainer = document.getElementById('toast-container');
+  if (!toastContainer) {
+    toastContainer = document.createElement('div');
+    toastContainer.id = 'toast-container';
+    toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
+    toastContainer.style.zIndex = '1050';
+    document.body.appendChild(toastContainer);
+  }
+  
+  // Create toast element
+  const toastId = 'toast-' + Date.now();
+  const toastElement = document.createElement('div');
+  toastElement.id = toastId;
+  toastElement.className = 'toast';
+  toastElement.setAttribute('role', 'alert');
+  toastElement.setAttribute('aria-live', 'assertive');
+  toastElement.setAttribute('aria-atomic', 'true');
+  
+  // Toast content
+  toastElement.innerHTML = `
+    <div class="toast-header">
+      <strong class="me-auto">Thông báo</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      ${message}
+    </div>
+  `;
+  
+  // Add toast to container
+  toastContainer.appendChild(toastElement);
+  
+  // Initialize Bootstrap toast
+  if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+    const toast = new bootstrap.Toast(toastElement);
+    toast.show();
+    
+    // Remove toast after it's hidden
+    toastElement.addEventListener('hidden.bs.toast', function() {
+      toastElement.remove();
+    });
+  } else {
+    // Fallback if Bootstrap is not available
+    toastElement.style.display = 'block';
+    setTimeout(() => {
+      toastElement.remove();
+    }, 5000);
+  }
+}
+
 // Helper function to format currency
 function formatCurrency(amount) {
   return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -219,6 +436,19 @@ function formatCurrency(amount) {
 
 // Initialize cart when page loads
 document.addEventListener('DOMContentLoaded', function() {
+  // Check if user came from login page after adding to cart
+  const cartReturnUrl = localStorage.getItem('cartReturnUrl');
+  if (cartReturnUrl && localStorage.getItem('isLoggedIn') === 'true') {
+    // Clear the return URL
+    localStorage.removeItem('cartReturnUrl');
+    
+    // Show welcome back message
+    const username = localStorage.getItem('username');
+    if (username) {
+      showToast(`Chào mừng ${username} quay trở lại! Bạn có thể tiếp tục mua sắm.`);
+    }
+  }
+  
   // Add animation styles
   const styleElement = document.createElement('style');
   styleElement.textContent = `
@@ -277,10 +507,43 @@ document.addEventListener('DOMContentLoaded', function() {
   if (window.location.pathname.includes('cart.html')) {
     updateCartUI();
     updateTotal();
+    
+    // Add clear cart button if not exists
+    const actionBtnsContainer = document.querySelector('.cart-action-buttons');
+    if (actionBtnsContainer && !document.getElementById('clearCartBtn')) {
+      const clearBtn = document.createElement('button');
+      clearBtn.id = 'clearCartBtn';
+      clearBtn.className = 'btn btn-outline-danger me-2';
+      clearBtn.textContent = 'Xóa giỏ hàng';
+      clearBtn.onclick = clearCart;
+      
+      // Insert before checkout button
+      actionBtnsContainer.prepend(clearBtn);
+    }
+  }
+  
+  // If on checkout page, set up checkout form
+  if (window.location.pathname.includes('checkout.html')) {
+    updateTotal(); // Update order summary
+    
+    // Set up form submission
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+      checkoutForm.addEventListener('submit', handleCheckoutSubmission);
+    }
+    
+    // Pre-fill user information if available
+    const username = localStorage.getItem('username');
+    const fullNameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('email');
+    
+    if (username && fullNameInput) {
+      fullNameInput.value = username;
+    }
   }
   
   // Setup add to cart buttons
-  function setupAddToCartButtons() {
+  window.setupAddToCartButtons = function() {
     // This function needs to be callable both on page load and after products are dynamically added
     const addToCartButtons = document.querySelectorAll('.product .btn-primary');
     addToCartButtons.forEach(button => {
@@ -308,25 +571,47 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     });
-  }
+  };
   
   // Initial setup
-  setupAddToCartButtons();
+  if (typeof setupAddToCartButtons === 'function') {
+    setupAddToCartButtons();
+  }
   
-  // Check if we're on the index page which loads products dynamically
-  if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
-    // Wait for products to be loaded
-    const productsObserver = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        if (mutation.addedNodes.length) {
-          // Once products are added to the DOM, set up cart buttons
+  // Listen for product loading events
+  const productsObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.addedNodes.length) {
+        // Once products are added to the DOM, set up cart buttons
+        if (typeof setupAddToCartButtons === 'function') {
           setupAddToCartButtons();
         }
-      });
+      }
     });
-    
-    const productsContainer = document.getElementById('products_list');
-    if (productsContainer) {
-      productsObserver.observe(productsContainer, { childList: true });
-    }
+  });
+  
+  const productsContainer = document.getElementById('products_list');
+  if (productsContainer) {
+    productsObserver.observe(productsContainer, { childList: true });
   }
+  
+  // Add checkout button event listener
+  const checkoutButton = document.getElementById('checkoutBtn');
+  if (checkoutButton) {
+    checkoutButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      proceedToCheckout();
+    });
+  }
+});
+
+// Export functions for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    addToCart,
+    removeItem,
+    clearCart,
+    updateCartCount,
+    proceedToCheckout
+  };
+}
