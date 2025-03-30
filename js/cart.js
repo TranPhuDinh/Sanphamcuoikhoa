@@ -1,5 +1,38 @@
 // Cart management functions
-let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+let cart = [];
+try {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+        cart = JSON.parse(storedCart);
+    }
+} catch (error) {
+    console.error("Lỗi khi đọc giỏ hàng từ localStorage:", error);
+}
+
+
+// Add default product to cart if cart is empty
+function addDefaultProduct() {
+  // Skip if cart already has items
+  if (cartItems.length > 0) return;
+  
+  // Default product details
+  const defaultProduct = {
+    id: "default001",
+    name: "Áo thun basic",
+    price: 399000, // 399,000 VNĐ
+    image: "/api/placeholder/300/300",
+    quantity: 1
+  };
+  
+  // Add default product to cart
+  cartItems.push(defaultProduct);
+  
+  // Save cart to localStorage
+  localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  
+  // Update cart count
+  updateCartCount();
+}
 
 // Add item to cart with animation
 function addToCart(product, sourceElement) {
@@ -118,12 +151,34 @@ function removeItem(itemId) {
 
   cartItems = cartItems.filter(item => item.id !== itemId);
   localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  
+  // Add default product if cart becomes empty
+  if (cartItems.length === 0) {
+    addDefaultProduct();
+  }
+  
   updateCartUI();
   updateTotal();
   updateCartCount();
   
   // Show remove success message
   showToast(`${itemName} đã được xóa khỏi giỏ hàng!`);
+}
+
+// Clear cart function - modified to keep default product
+function clearCart() {
+  if (confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?')) {
+    cartItems = [];
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    
+    // Add default product after clearing
+    addDefaultProduct();
+    
+    updateCartUI();
+    updateTotal();
+    updateCartCount();
+    showToast('Giỏ hàng đã được xóa!');
+  }
 }
 
 // Increase quantity
@@ -200,39 +255,14 @@ function updateOrderSummary(subtotal, shipping, total) {
   orderSummaryContainer.innerHTML = summaryHTML;
 }
 
-// Update cart UI
+// Update cart UI - modified to prevent showing empty cart message
 function updateCartUI() {
   const cartItemsContainer = document.getElementById('cart-items-container');
   if (!cartItemsContainer) return;
   
   cartItemsContainer.innerHTML = '';
   
-  if (cartItems.length === 0) {
-    cartItemsContainer.innerHTML = `
-      <div class="text-center py-5">
-        <div class="mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-cart-x text-muted" viewBox="0 0 16 16">
-            <path d="M7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 0 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793z"/>
-            <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 1H2a.5.5 0 0 0 0-1h1.64a.5.5 0 0 0 .311-.118l.5-.294A.5.5 0 0 0 4 12H1.5a.5.5 0 0 1-.474-.658L2.694 4.04l-.867-3.477A.5.5 0 0 0 1.123 0H.5zm3.915 10L3.102 4h10.796l-1.313 6h-9.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-          </svg>
-        </div>
-        <h4 class="text-muted">Giỏ hàng của bạn đang trống</h4>
-        <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng của bạn</p>
-        <a href="./index.html" class="btn btn-primary mt-3">Tiếp tục mua sắm</a>
-      </div>
-    `;
-    
-    // Disable checkout button if it exists
-    const checkoutBtn = document.getElementById('checkoutBtn');
-    if (checkoutBtn) checkoutBtn.disabled = true;
-    
-    return;
-  }
-  
-  // Enable checkout button if it exists
-  const checkoutBtn = document.getElementById('checkoutBtn');
-  if (checkoutBtn) checkoutBtn.disabled = false;
-  
+  // Always show cart items since we should always have at least default product
   cartItems.forEach(item => {
     const itemElement = document.createElement('div');
     itemElement.className = 'card mb-3';
@@ -269,6 +299,10 @@ function updateCartUI() {
     `;
     cartItemsContainer.appendChild(itemElement);
   });
+  
+  // Always enable checkout button
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  if (checkoutBtn) checkoutBtn.disabled = false;
 }
 
 // Update cart count in navbar
@@ -294,20 +328,9 @@ function updateCartCount() {
   // Update all cart count badges
   document.querySelectorAll('.cart-count').forEach(badge => {
     badge.textContent = totalItems;
-    badge.style.display = totalItems > 0 ? 'inline' : 'none';
+    // Always display the badge
+    badge.style.display = 'inline';
   });
-}
-
-// Clear cart function
-function clearCart() {
-  if (confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?')) {
-    cartItems = [];
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    updateCartUI();
-    updateTotal();
-    updateCartCount();
-    showToast('Giỏ hàng đã được xóa!');
-  }
 }
 
 // Checkout function
@@ -320,12 +343,7 @@ function proceedToCheckout() {
     return false;
   }
   
-  if (cartItems.length === 0) {
-    alert('Giỏ hàng của bạn đang trống');
-    return false;
-  }
-  
-  // If everything is valid, navigate to checkout page
+  // Always allow checkout since we will always have at least one product
   window.location.href = './checkout.html';
   return true;
 }
@@ -335,9 +353,12 @@ function saveOrderToFirebase(orderData) {
   // This would be implemented once Firebase is properly initialized
   console.log("Saving order to Firebase:", orderData);
   
-  // For now, just clear the cart and redirect to confirmation page
+  // Clear the cart
   cartItems = [];
   localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  
+  // Add default product after order is placed
+  addDefaultProduct();
   
   // Save order summary in localStorage for confirmation page
   localStorage.setItem('lastOrder', JSON.stringify(orderData));
@@ -436,6 +457,9 @@ function formatCurrency(amount) {
 
 // Initialize cart when page loads
 document.addEventListener('DOMContentLoaded', function() {
+  // Add the default product if cart is empty
+  addDefaultProduct();
+  
   // Check if user came from login page after adding to cart
   const cartReturnUrl = localStorage.getItem('cartReturnUrl');
   if (cartReturnUrl && localStorage.getItem('isLoggedIn') === 'true') {
@@ -612,6 +636,7 @@ if (typeof module !== 'undefined' && module.exports) {
     removeItem,
     clearCart,
     updateCartCount,
-    proceedToCheckout
+    proceedToCheckout,
+    addDefaultProduct
   };
 }
