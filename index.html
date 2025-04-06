@@ -12,6 +12,14 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <!-- Trong navbar hoặc header -->
+<a href="./html/login.html" class="btn btn-primary" id="loginBtn">Đăng nhập</a>
+
+<div id="userDisplayArea" class="d-none">
+  <span id="usernameDisplay" class="fw-bold text-primary"></span>
+  <button id="logoutBtn" class="btn btn-outline-secondary ms-2">Đăng xuất</button>
+</div>
+
   </head>
   <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -58,7 +66,9 @@
                 <span>Giỏ hàng</span>
               </a>
               
-              <a href="./html/login.html" class="btn btn-primary">Đăng nhập</a>
+              <a href="./html/login.html" class="btn btn-primary" id="loginBtn">Đăng nhập</a>
+              <span id="userGreeting" class="me-2 fw-bold text-primary" style="display: none;"></span>
+
             </div>
         </div>
       </div>
@@ -149,8 +159,24 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-
+    <script src="./auth.js"></script>
     <script src="./js/call_api.js"></script>
     <script src="./js/firebase.js"></script>
+    <script>
+      // Lấy tên người dùng từ localStorage
+      const username = localStorage.getItem("username");
+    
+      if (username) {
+        // Hiển thị chào mừng và ẩn nút đăng nhập
+        const greeting = document.getElementById("userGreeting");
+        const loginBtn = document.getElementById("loginBtn");
+    
+        greeting.textContent = `Xin chào, ${username}!`;
+        greeting.style.display = "inline-block";
+    
+        if (loginBtn) loginBtn.style.display = "none";
+      }
+    </script>
+    
   </body>
 </html>

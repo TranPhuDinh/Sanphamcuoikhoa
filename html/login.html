@@ -12,7 +12,8 @@
             <!-- Form Đăng nhập -->
             <div class="form login">
                 <h2 class="title">Đăng nhập</h2>
-                <form action="#">
+                <form onsubmit="return handleLogin(event)">
+
                     <div class="input-field">
                         <i>📧</i>
                         <input type="email" placeholder="Email" required>
@@ -109,5 +110,45 @@
             }
         }
     </script>
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+    
+            const emailInput = document.querySelector('.login input[type="email"]');
+            const passwordInput = document.querySelector('.login input[type="password"]');
+    
+            const email = emailInput.value;
+            const password = passwordInput.value;
+    
+            // Đây là ví dụ: kiểm tra tạm thời với dữ liệu cứng
+            if (email && password) {
+                // Tách tên người dùng từ email (hoặc có thể thêm trường tên riêng)
+                const username = email.split('@')[0];
+    
+                // Lưu vào localStorage
+                localStorage.setItem('username', username);
+    
+                // Chuyển về trang chủ
+                window.location.href = 'index.html';
+            } else {
+                alert("Vui lòng nhập đầy đủ email và mật khẩu.");
+            }
+    
+            return false;
+        }
+    </script>
+    <script src="/js/auth.js"></script>
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+    
+            const email = document.querySelector('.login input[type="email"]').value;
+            const password = document.querySelector('.login input[type="password"]').value;
+            const username = email.split('@')[0];
+    
+            return login(username, password);
+        }
+    </script>
+    
 </body>
 </html>
