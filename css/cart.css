@@ -10,12 +10,11 @@ body {
 }
 
 footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    margin-top: auto;
-    height: 100vh;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 40px;
 }
 
 .cart-items .card {
@@ -99,3 +98,9 @@ footer {
   .cart-pop {
     animation: cartPop 0.5s ease-in-out;
   }
+  .cart-items .card:hover {
+    border: 1px solid #007bff;
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+  }
+  
