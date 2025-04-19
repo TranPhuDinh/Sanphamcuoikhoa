@@ -127,9 +127,14 @@ function create_category_item(category) {
 }
 
 function create_product_item(product) {
-  // create product item
   const article = document.createElement("article");
   article.className = "product";
+  
+  // 👇 Thêm sự kiện click vào thẻ sản phẩm
+  article.onclick = function () {
+    localStorage.setItem("selectedProduct", JSON.stringify(product));
+    window.location.href = "html/product-detail.html"; // Đường dẫn tùy vào cấu trúc thư mục
+  };
 
   const img = document.createElement("img");
   img.src = product.DefaultProductImage;
@@ -149,11 +154,11 @@ function create_product_item(product) {
 
   const price = document.createElement("div");
   price.className = "price";
-  
+
   const priceStrong = document.createElement("strong");
   priceStrong.textContent = "$" + product.ListPrice;
   price.appendChild(priceStrong);
-  
+
   if (product.OriginalPrice && product.OriginalPrice !== product.ListPrice) {
     const originalPrice = document.createElement("span");
     originalPrice.className = "original-price";
@@ -163,18 +168,13 @@ function create_product_item(product) {
     originalPrice.style.marginLeft = "8px";
     price.appendChild(originalPrice);
   }
-  
+
   productInfo.appendChild(price);
-
-  const button = document.createElement("button");
-  button.className = "btn btn-primary";
-  button.textContent = "Thêm vào giỏ hàng";
-  button.id = product.ItemCode; // Set the product ItemCode as the button ID for identification
-  productInfo.appendChild(button);
-
   article.appendChild(productInfo);
+
   return article;
 }
+
 
 // Call categories API when page loads
 document.addEventListener('DOMContentLoaded', function() {

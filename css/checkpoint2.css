@@ -135,3 +135,12 @@ footer {
 .product {
   animation: fadeIn 0.6s ease;
 }
+.navbar .btn {
+  margin-left: 10px;
+  border-radius: 8px;
+}
+.navbar #userGreeting {
+  color: #0d6efd;
+  font-weight: bold;
+  margin-right: 10px;
+}
