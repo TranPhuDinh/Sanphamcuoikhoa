@@ -14,32 +14,65 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <a class="navbar-brand" href="../index.html">Shop Online</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarTogglerDemo02"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item"><a class="nav-link" href="../index.html">Trang chủ</a></li>
-            <li class="nav-item"><a class="nav-link" href="../index.html#products">Sản phẩm</a></li>
-            <li class="nav-item"><a class="nav-link" href="../index.html#contact">Liên hệ</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html#products">Sản phẩm</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html#contact">Liên hệ</a>
+            </li>
           </ul>
 
           <form class="d-flex me-2" role="search">
-            <input class="form-control me-2" type="search" placeholder="Tìm kiếm" />
-            <button class="btn btn-outline-success" type="submit">Tìm kiếm</button>
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Tìm kiếm"
+            />
           </form>
 
           <div class="d-flex align-items-center">
-            <a href="./cart.html" class="btn btn-outline-primary me-2" title="Giỏ hàng">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+            <a
+              href="./cart.html"
+              class="btn btn-outline-primary me-2"
+              title="Giỏ hàng"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-cart"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
+                />
               </svg>
               <span>Giỏ hàng</span>
             </a>
-            <a href="./login.html" class="btn btn-primary" id="loginBtn">Đăng nhập</a>
+            <a href="./login.html" class="btn btn-primary" id="loginBtn"
+              >Đăng nhập</a
+            >
             <div class="user-info d-none" id="userDisplayArea">
-              <span class="me-2">Xin chào, <strong id="usernameDisplay"></strong></span>
-              <button class="btn btn-outline-secondary btn-sm" id="logoutBtn">Đăng xuất</button>
+              <span class="me-2"
+                >Xin chào, <strong id="usernameDisplay"></strong
+              ></span>
+              <button class="btn btn-outline-secondary btn-sm" id="logoutBtn">
+                Đăng xuất
+              </button>
             </div>
           </div>
         </div>
@@ -72,11 +105,22 @@
                 <strong>Tổng cộng:</strong>
                 <strong id="total">0đ</strong>
               </div>
-              <button class="btn btn-success w-100 mb-2" id="checkoutBtn">Thanh toán</button>
-              <div class="cart-action-buttons d-flex justify-content-between mt-2">
-                <button class="btn btn-outline-danger w-100" onclick="clearCart()">Xóa toàn bộ giỏ hàng</button>
+              <button class="btn btn-success w-100 mb-2" id="checkoutBtn">
+                Thanh toán
+              </button>
+              <div
+                class="cart-action-buttons d-flex justify-content-between mt-2"
+              >
+                <button
+                  class="btn btn-outline-danger w-100"
+                  onclick="clearCart()"
+                >
+                  Xóa toàn bộ giỏ hàng
+                </button>
               </div>
-              <a href="../index.html" class="btn btn-outline-primary w-100 mt-2">Tiếp tục mua hàng</a>
+              <a href="../index.html" class="btn btn-outline-primary w-100 mt-2"
+                >Tiếp tục mua hàng</a
+              >
             </div>
           </div>
         </div>
@@ -84,11 +128,13 @@
     </div>
 
     <footer class="mt-5">
-      <p class="text-center">&copy; 2025 Trang Bán Hàng. Tất cả các quyền được bảo lưu.</p>
+      <p class="text-center">
+        &copy; 2025 Trang Bán Hàng. Tất cả các quyền được bảo lưu.
+      </p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/cart.js"></script>
-    <script src="../js/auth.js"></script>
+    <script src="/js/cart/cart.js"></script>
+    <script src="/js/login/auth.js"></script>
   </body>
 </html>
