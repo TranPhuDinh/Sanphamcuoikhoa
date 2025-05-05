@@ -1,141 +1,232 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thanh toán đơn hàng</title>
-  <link rel="stylesheet" href="../css/payment.css">
-</head>
-<body>
-  <div class="form-container">
-    <form action="#" method="POST" class="checkout-form" onsubmit="return redirectToThankYouPage(event)">
-
-      <!-- Địa chỉ thanh toán -->
-      <div class="form-section billing-section">
-        <h3 class="section-title">Thông tin nhận hàng</h3>
-        <div class="form-group">
-          <label for="full-name" class="form-label">Họ tên:</label>
-          <input type="text" id="full-name" name="full-name" class="form-input" placeholder="Nguyễn Văn A" required>
-        </div>
-
-        <div class="form-group">
-          <label for="email" class="form-label">Email:</label>
-          <input type="email" id="email" name="email" class="form-input" placeholder="example@email.com" required>
-        </div>
-
-        <div class="form-group">
-          <label for="address" class="form-label">Địa chỉ:</label>
-          <input type="text" id="address" name="address" class="form-input" placeholder="123 Đường ABC" required>
-        </div>
-
-        <div class="form-group">
-          <label for="city" class="form-label">Tỉnh / Thành phố:</label>
-          <input type="text" id="city" name="city" class="form-input" placeholder="Hà Nội" required>
-        </div>
-
-        <div class="form-row">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanh toán đơn hàng</title>
+    <link rel="stylesheet" href="../css/payment.css" />
+  </head>
+  <body>
+    <div class="form-container">
+      <form
+        action="#"
+        method="POST"
+        class="checkout-form"
+        onsubmit="return redirectToThankYouPage(event)"
+      >
+        <!-- Địa chỉ thanh toán -->
+        <div class="form-section billing-section">
+          <h3 class="section-title">Thông tin nhận hàng</h3>
           <div class="form-group">
-            <label for="state" class="form-label">Quận / Huyện:</label>
-            <input type="text" id="state" name="state" class="form-input" placeholder="Hoàn Kiếm" required>
+            <label for="full-name" class="form-label">Họ tên:</label>
+            <input
+              type="text"
+              id="full-name"
+              name="full-name"
+              class="form-input"
+              placeholder="Nguyễn Văn A"
+              required
+            />
           </div>
+
           <div class="form-group">
-            <label for="zip" class="form-label">Mã bưu điện:</label>
-            <input type="text" id="zip" name="zip" class="form-input" placeholder="100000" required>
+            <label for="email" class="form-label">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="example@email.com"
+              required
+            />
           </div>
-        </div>
-      </div>
 
-      <!-- Thanh toán -->
-      <div class="form-section payment-section">
-        <h3 class="section-title">Thanh toán</h3>
-        <div class="form-group">
-          <label class="form-label">Chấp nhận thẻ:</label>
-          <div class="card-icons">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" class="card-item">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1200px-Mastercard-logo.svg.png" alt="MasterCard" class="card-item">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="Amex" class="card-item">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="nameoncard" class="form-label">Tên trên thẻ:</label>
-          <input type="text" id="nameoncard" name="nameoncard" class="form-input" placeholder="Tên in trên thẻ" required>
-        </div>
-
-        <div class="form-group">
-          <label for="creditcard" class="form-label">Số thẻ:</label>
-          <input type="text" id="creditcard" name="creditcard" class="form-input" placeholder="0000 1111 2222 3333" required>
-        </div>
-
-        <div class="form-row">
           <div class="form-group">
-            <label for="expMonth" class="form-label">Tháng hết hạn:</label>
-            <select id="expMonth" name="expMonth" class="form-input">
-              <option>Tháng</option>
-              <option>01</option>
-              <option>02</option>
-              <option>03</option>
-              <option>04</option>
-              <option>05</option>
-              <option>06</option>
-              <option>07</option>
-              <option>08</option>
-              <option>09</option>
-              <option>10</option>
-              <option>11</option>
-              <option>12</option>
-            </select>
+            <label for="address" class="form-label">Địa chỉ:</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              class="form-input"
+              placeholder="123 Đường ABC"
+              required
+            />
           </div>
+
           <div class="form-group">
-            <label for="expYear" class="form-label">Năm hết hạn:</label>
-            <select id="expYear" name="expYear" class="form-input">
-              <option>Năm</option>
-              <option>2025</option>
-              <option>2026</option>
-              <option>2027</option>
-              <option>2028</option>
-              <option>2029</option>
-              <option>2030</option>
-            </select>
+            <label for="city" class="form-label">Tỉnh / Thành phố:</label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              class="form-input"
+              placeholder="Hà Nội"
+              required
+            />
           </div>
-          <div class="form-group">
-            <label for="cvv" class="form-label">CVV:</label>
-            <input type="text" id="cvv" name="cvv" class="form-input" placeholder="123" required>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="state" class="form-label">Quận / Huyện:</label>
+              <input
+                type="text"
+                id="state"
+                name="state"
+                class="form-input"
+                placeholder="Hoàn Kiếm"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="zip" class="form-label">Mã bưu điện:</label>
+              <input
+                type="text"
+                id="zip"
+                name="zip"
+                class="form-input"
+                placeholder="100000"
+                required
+              />
+            </div>
           </div>
         </div>
 
-        <!-- Hiển thị số tiền cần thanh toán -->
-        <div class="form-group">
-          <label class="form-label fw-bold">Số tiền cần thanh toán:</label>
-          <div id="total-amount" style="font-size: 20px; color: #28a745; font-weight: bold">Đang tải...</div>
+        <!-- Thanh toán -->
+        <div class="form-section payment-section">
+          <h3 class="section-title">Thanh toán</h3>
+          <div class="form-group">
+            <label class="form-label">Chấp nhận thẻ:</label>
+            <div class="card-icons">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg"
+                alt="Visa"
+                class="card-item"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1200px-Mastercard-logo.svg.png"
+                alt="MasterCard"
+                class="card-item"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg"
+                alt="Amex"
+                class="card-item"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="nameoncard" class="form-label">Tên trên thẻ:</label>
+            <input
+              type="text"
+              id="nameoncard"
+              name="nameoncard"
+              class="form-input"
+              placeholder="Tên in trên thẻ"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="creditcard" class="form-label">Số thẻ:</label>
+            <input
+              type="text"
+              id="creditcard"
+              name="creditcard"
+              class="form-input"
+              placeholder="0000 1111 2222 3333"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expMonth" class="form-label">Tháng hết hạn:</label>
+              <select id="expMonth" name="expMonth" class="form-input">
+                <option>Tháng</option>
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="expYear" class="form-label">Năm hết hạn:</label>
+              <select id="expYear" name="expYear" class="form-input">
+                <option>Năm</option>
+                <option>2025</option>
+                <option>2026</option>
+                <option>2027</option>
+                <option>2028</option>
+                <option>2029</option>
+                <option>2030</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="cvv" class="form-label">CVV:</label>
+              <input
+                type="text"
+                id="cvv"
+                name="cvv"
+                class="form-input"
+                placeholder="123"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Hiển thị số tiền cần thanh toán -->
+          <div style="display: grid; grid-template-columns: auto auto">
+            <div class="form-group">
+              <label class="form-label fw-bold">Số lượng món hàng:</label>
+              <div
+                id="qty-amount"
+                style="font-size: 20px; color: #28a745; font-weight: bold"
+              >
+                Đang tải...
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label fw-bold">Số tiền cần thanh toán:</label>
+              <div
+                id="total-amount"
+                style="font-size: 20px; color: #28a745; font-weight: bold"
+              >
+                Đang tải...
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <button type="submit" class="submit-button">Thanh toán ngay</button>
-    </form>
-  </div>
+        <button type="submit" class="submit-button">Thanh toán ngay</button>
+      </form>
+    </div>
 
-  <script>
-    function redirectToThankYouPage(event) {
-      event.preventDefault();
-      window.location.href = "thank-you.html";
-      return false;
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-      const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      const shipping = 30000;
-      const total = subtotal + shipping;
-      const totalElement = document.getElementById("total-amount");
-      if (totalElement) {
-        totalElement.textContent = formatCurrency(total) + "đ";
+    <script>
+      function redirectToThankYouPage(event) {
+        event.preventDefault();
+        window.location.href = "./order-confirmation.html";
+        return false;
       }
-    });
 
-    function formatCurrency(amount) {
-      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-  </script>
-</body>
+      document.addEventListener("DOMContentLoaded", () => {
+        try {
+          const totalCart = JSON.parse(localStorage.getItem("totalCart"));
+          document.getElementById("total-amount").innerText = totalCart.sum;
+          document.getElementById("qty-amount").innerText = totalCart.qty;
+        } catch (err) {
+          alert(err);
+          location.href = "../index.html";
+        }
+      });
+    </script>
+  </body>
 </html>

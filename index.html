@@ -12,18 +12,11 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-    
-
-<div id="userDisplayArea" class="d-none">
-  <span id="usernameDisplay" class="fw-bold text-primary"></span>
-  <button id="logoutBtn" class="btn btn-outline-secondary ms-2">Đăng xuất</button>
-</div>
-
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
       <div class="container-fluid">
-        <a class="navbar-brand" href="index.html">Shop Online</a>
+        <a class="navbar-brand" href="./index.html">Shop Online</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -35,38 +28,60 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" href="index.html">Trang chủ</a>
+              <a class="nav-link active" href="./index.html">Trang chủ</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#products">Sản phẩm</a>
+              <a class="nav-link" href="./index.html#products">Sản phẩm</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#contact">Liên hệ</a>
+              <a class="nav-link" href="./index.html#contact">Liên hệ</a>
             </li>
           </ul>
 
-          <form class="d-flex me-2" role="search">
-            <div class="d-flex align-items-center">
-              <form class="d-flex me-2" role="search">
-                <input
-                  class="form-control me-2"
-                  type="search"
-                  placeholder="Tìm kiếm"
-                />
-              
-              </form>
-              
-              <a href="./html/cart.html" class="btn btn-outline-primary me-2" title="Giỏ hàng">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                  <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                </svg>
-                <span>Giỏ hàng</span>
-              </a>
-              
-              <a href="./html/login.html" class="btn btn-primary" id="loginBtn">Đăng nhập</a>
-              <span id="userGreeting" class="me-2 fw-bold text-primary" style="display: none;"></span>
+          <div class="d-flex align-items-center">
+            <span
+              id="userGreeting"
+              class="me-2 fw-bold text-primary"
+              style="display: none"
+            ></span>
 
-            </div>
+            <a
+              href="./html/cart.html"
+              class="btn btn-outline-primary me-2"
+              id="cart"
+              title="Giỏ hàng"
+              style="width: 200px"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-cart"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
+                />
+              </svg>
+              <span>Giỏ hàng</span>
+            </a>
+
+            <a
+              href="./html/login.html"
+              class="btn btn-primary"
+              id="login"
+              style="width: 150px"
+              >Đăng nhập</a
+            >
+            <button
+              class="btn btn-secondary ms-2"
+              id="logout"
+              style="display: none; width: 150px"
+            >
+              Đăng xuất
+            </button>
+          </div>
         </div>
       </div>
     </nav>
@@ -147,6 +162,8 @@
 
       <section class="product-grid" id="products_list"></section>
     </main>
+
+    <!-- footer -->
     <footer>
       <p>&copy; 2025 Trang Bán Hàng. Tất cả các quyền được bảo lưu.</p>
     </footer>
@@ -156,24 +173,8 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-    <script src="./js/login/auth.js"></script>
-    <script src="./js/call_api.js"></script>
-    <script src="./js/home/firebase.js"></script>
-    <script>
-      // Lấy tên người dùng từ localStorage
-      const username = localStorage.getItem("username");
-    
-      if (username) {
-        // Hiển thị chào mừng và ẩn nút đăng nhập
-        const greeting = document.getElementById("userGreeting");
-        const loginBtn = document.getElementById("loginBtn");
-    
-        greeting.textContent = `Xin chào, ${username}!`;
-        greeting.style.display = "inline-block";
-    
-        if (loginBtn) loginBtn.style.display = "none";
-      }
-    </script>
-    
+    <script type="module" src="./js/trangchu/call_api.js"></script>
+
+    <script type="module" src="./js/trangchu/nav.js"></script>
   </body>
 </html>
